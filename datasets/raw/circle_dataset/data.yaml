@@ -1,0 +1,16 @@
+# Roboflow Universe Source: deneme-3usbo / circle-9po6m (v1)
+names:
+- Circle
+- blue circle
+- green circle
+- redcircle
+nc: 4
+roboflow:
+  license: CC BY 4.0
+  project: circle-9po6m
+  url: https://universe.roboflow.com/deneme-3usbo/circle-9po6m/dataset/1
+  version: 1
+  workspace: deneme-3usbo
+test: ../test/images
+train: ../train/images
+val: ../valid/images

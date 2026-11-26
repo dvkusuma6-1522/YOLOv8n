@@ -1,0 +1,13 @@
+# Roboflow Universe Source: 21-jyqut / cone-detector-uexft (v1)
+names:
+- cone detection - v1 2024-08-13 3-16pm
+nc: 1
+roboflow:
+  license: CC BY 4.0
+  project: cone-detector-uexft
+  url: https://universe.roboflow.com/21-jyqut/cone-detector-uexft/dataset/1
+  version: 1
+  workspace: 21-jyqut
+test: ../test/images
+train: ../train/images
+val: ../valid/images

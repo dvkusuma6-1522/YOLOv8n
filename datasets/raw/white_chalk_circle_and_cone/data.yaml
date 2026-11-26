@@ -1,0 +1,14 @@
+# Roboflow Universe Source: kusuma-dv / white-chalk-circle-and-cone (v3)
+names:
+- cone
+- white_chalk_circle
+nc: 2
+roboflow:
+  license: CC BY 4.0
+  project: white-chalk-circle-and-cone
+  url: https://universe.roboflow.com/kusuma-dv/white-chalk-circle-and-cone/dataset/3
+  version: 3
+  workspace: kusuma-dv
+test: ../test/images
+train: ../train/images
+val: ../valid/images

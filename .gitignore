@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter & Colab Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+test_audit/
+extracted_results/
+scratch/
+
+# Large Model Weights (Keep git lightweight; weights stored on Google Drive)
+*.pt
+*.engine
+*.bin
+weights/
+
+# Raw Datasets & Image Blobs (Images tracked via Roboflow/Google Drive)
+*.zip
+*.tar.gz
+*.tgz
+datasets/raw/*/images/
+datasets/raw/*/train/
+datasets/raw/*/valid/
+datasets/raw/*/test/
+custom_rover_uploads/
+
+# Environment Variables & Secrets
+.env
+*.env.local
+*.secret
+
+# OS Specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

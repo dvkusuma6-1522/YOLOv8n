@@ -1,0 +1,24 @@
+# Core Deep Learning & Computer Vision
+ultralytics>=8.1.0
+torch>=2.0.0
+torchvision>=0.15.0
+opencv-python>=4.8.0
+pillow>=9.5.0
+numpy>=1.24.0
+scipy>=1.10.0
+imagehash>=4.3.1
+
+# Dataset & Roboflow Integration
+roboflow>=1.1.0
+pyyaml>=6.0
+tqdm>=4.65.0
+requests>=2.28.0
+
+# Visualization & Evaluation
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+
+# Model Export & Edge Deployment
+onnx>=1.14.0
+onnxslim>=0.1.20
