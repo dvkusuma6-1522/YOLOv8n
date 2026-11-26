@@ -22,13 +22,13 @@ test_audit/
 extracted_results/
 scratch/
 
-# Large Model Weights (Keep git lightweight; weights stored on Google Drive)
+# Large Model Weights (Outside rover_training_data)
 *.pt
 *.engine
 *.bin
 weights/
 
-# Raw Datasets & Image Blobs (Images tracked via Roboflow/Google Drive)
+# Raw Datasets & Image Blobs
 *.zip
 *.tar.gz
 *.tgz
@@ -48,3 +48,6 @@ custom_rover_uploads/
 Thumbs.db
 .vscode/
 .idea/
+
+# Allow all files in rover_training_data (tracked via Git LFS)
+!rover_training_data/**

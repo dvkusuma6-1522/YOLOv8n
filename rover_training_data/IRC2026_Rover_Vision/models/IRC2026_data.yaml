@@ -1,0 +1,12 @@
+# IRC 2026 Autonomous Rover Object Detection Dataset
+# Unified Two-Class Benchmark: 0: cone, 1: circle
+
+path: /content/IRC2026_UNIFIED_DATASET
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 2
+names:
+  0: cone
+  1: circle

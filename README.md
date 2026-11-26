@@ -62,14 +62,22 @@ YOLOv8n/
 ├── models/
 │   └── README.md                            # Checkpoint specifications, latency, and loading guide
 │
-└── results/
-    ├── README.md                            # Evaluation reports & metric graphs
-    ├── results.png                          # Training loss and mAP convergence curves
-    ├── confusion_matrix.png                 # Final validation confusion matrix
-    ├── BoxF1_curve.png                      # F1-Confidence curve (optimal threshold ~0.25-0.45)
-    └── sample_predictions/                  # Real-world inference sample detections
-        ├── sample_cone_detection.png
-        └── sample_chalk_circle_detection.png
+├── results/
+│   ├── README.md                            # Evaluation reports & metric graphs
+│   ├── results.png                          # Training loss and mAP convergence curves
+│   ├── confusion_matrix.png                 # Final validation confusion matrix
+│   ├── BoxF1_curve.png                      # F1-Confidence curve (optimal threshold ~0.25-0.45)
+│   └── sample_predictions/                  # Real-world inference sample detections
+│       ├── sample_cone_detection.png
+│       └── sample_chalk_circle_detection.png
+│
+└── rover_training_data/                     # Complete extracted Google Drive project folder (857.8 MB)
+    └── IRC2026_Rover_Vision/
+        ├── datasets/
+        │   ├── merged/
+        │   └── raw/                         # Raw dataset archives (cone, circle, white-chalk)
+        ├── models/                          # Trained weights (.pt, .onnx, data.yaml)
+        └── results/                         # Training run outputs, epoch checkpoints, batch mosaics
 ```
 
 ---
@@ -166,3 +174,107 @@ def camera_callback(msg):
 ## 🔒 Security & Credential Hygiene
 - **Zero API Key Leakage**: No hardcoded API keys are present in any notebook cells or repository files.
 - **Safe Secrets Usage**: Roboflow API credentials are exclusively retrieved at runtime via `google.colab.userdata.get('ROBOFLOW_API_KEY')` with interactive masked fallback.
+
+---
+
+## 📦 Complete Rover Training Dataset and Model Artifacts
+
+This repository includes the complete extracted Google Drive training directory under [`rover_training_data/IRC2026_Rover_Vision/`](rover_training_data/IRC2026_Rover_Vision/) (857.75 MB across 39 files), preserving all original datasets, checkpoints, training batch mosaics, and evaluation logs.
+
+### 1. Folder Structure & Contents
+
+```
+rover_training_data/IRC2026_Rover_Vision/
+├── datasets/
+│   ├── merged/                              # Staging directory for balanced unified dataset
+│   └── raw/                                 # Complete raw Roboflow source archives
+│       ├── cone-detector-uexft-1.zip        # 453.10 MB (6,620 images of traffic cones)
+│       ├── circle-9po6m-1.zip               #  99.60 MB (2,171 images of geometric circles)
+│       └── white-chalk-circle-and-cone-3.zip #  59.97 MB (1,013 images of chalk circles & cones)
+│
+├── models/                                  # Exported weights & deployment models
+│   ├── IRC2026_YOLOv8n_best.pt              # 6.20 MB (Best validation mAP PyTorch weights)
+│   ├── IRC2026_YOLOv8n_last.pt              # 6.20 MB (Final epoch checkpoint for resumption)
+│   ├── IRC2026_YOLOv8n_best_20261125_233233.pt # 6.20 MB (Timestamped best checkpoint)
+│   ├── IRC2026_YOLOv8n.onnx                 # 12.18 MB (Slimmed ONNX model for TensorRT/ROS 2)
+│   ├── IRC2026_YOLOv8n_best.onnx            # 12.18 MB (Verified ONNX best model)
+│   └── IRC2026_data.yaml                    # Unified dataset configuration
+│
+└── results/
+    └── run_20261125_233233/
+        └── training_run/                    # Full training run outputs (25 epochs on Tesla T4)
+            ├── args.yaml                    # Exact Ultralytics training hyperparameters
+            ├── results.csv                  # Epoch-by-epoch loss and mAP progression
+            ├── results.png                  # Loss convergence & mAP curves
+            ├── confusion_matrix.png         # Unnormalized confusion matrix
+            ├── confusion_matrix_normalized.png # Normalized confusion matrix
+            ├── BoxF1_curve.png              # F1 vs Confidence curve
+            ├── BoxPR_curve.png              # Precision-Recall curve
+            ├── BoxP_curve.png               # Precision vs Confidence curve
+            ├── BoxR_curve.png               # Recall vs Confidence curve
+            ├── labels.jpg                   # Training label distribution & bounding box spatial map
+            ├── train_batch*.jpg             # Mosaic augmented training batches (6 mosaic images)
+            ├── val_batch*_labels.jpg        # Ground-truth validation targets (3 batches)
+            ├── val_batch*_pred.jpg          # Model prediction overlays on validation batches (3 batches)
+            └── weights/                     # Checkpoints saved during training
+                ├── best.pt                  # 6.20 MB
+                ├── last.pt                  # 6.20 MB
+                ├── epoch0.pt                # 30.31 MB (Includes optimizer state)
+                ├── epoch5.pt                # 30.31 MB
+                ├── epoch10.pt               # 30.32 MB
+                ├── epoch15.pt               # 30.32 MB
+                ├── epoch20.pt               # 30.32 MB
+                └── epoch25.pt               # 30.32 MB
+```
+
+### 2. How to Access Large Files (Git LFS)
+
+Large binary files (`.pt`, `.onnx`, and `.zip` archives) are tracked seamlessly via **Git Large File Storage (Git LFS)**:
+
+```bash
+# Clone with LFS objects
+git lfs install
+git clone https://github.com/dvkusuma6-1522/YOLOv8n.git
+
+# Or pull LFS binaries in an existing clone
+git lfs pull
+```
+
+### 3. How to Use the Trained Models
+
+#### Direct Python / Ultralytics Inference
+```python
+from ultralytics import YOLO
+
+# Load best PyTorch model
+model = YOLO("rover_training_data/IRC2026_Rover_Vision/models/IRC2026_YOLOv8n_best.pt")
+
+# Predict on rover camera frame
+results = model.predict(source="test_frame.jpg", conf=0.25, iou=0.45, imgsz=640)
+for box in results[0].boxes:
+    cls_id = int(box.cls[0])
+    conf = float(box.conf[0])
+    xyxy = box.xyxy[0].tolist()
+    print(f"Detected {model.names[cls_id]} ({conf*100:.1f}%) at {xyxy}")
+```
+
+#### ONNX Runtime Inference (Edge / ROS 2)
+```python
+import onnxruntime as ort
+import numpy as np
+
+session = ort.InferenceSession(
+    "rover_training_data/IRC2026_Rover_Vision/models/IRC2026_YOLOv8n.onnx",
+    providers=['CUDAExecutionProvider', 'CPUExecutionProvider']
+)
+input_name = session.get_inputs()[0].name
+dummy_img = np.random.randn(1, 3, 640, 640).astype(np.float32)
+outputs = session.run(None, {input_name: dummy_img})
+```
+
+### 4. Reproducing Training from Scratch
+To retrain using the raw datasets in `rover_training_data/`:
+1. Unzip `datasets/raw/*.zip` into local SSD scratch storage.
+2. Open [`IRC2026_YOLOv8n_Object_Detection.ipynb`](IRC2026_YOLOv8n_Object_Detection.ipynb) in Google Colab.
+3. Execute all cells to perform polygon-to-bbox conversion, class balancing, and T4 GPU fine-tuning.
+
